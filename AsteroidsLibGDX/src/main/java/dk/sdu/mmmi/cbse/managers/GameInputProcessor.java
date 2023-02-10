@@ -6,59 +6,25 @@ import com.badlogic.gdx.Input.Keys;
 public class GameInputProcessor extends InputAdapter {
 	
 	public boolean keyDown(int k) {
-		if(k == Keys.UP) {
-			GameKeys.setKey(GameKeys.UP, true);
-		}
-		if(k == Keys.LEFT) {
-			GameKeys.setKey(GameKeys.LEFT, true);
-		}
-		if(k == Keys.DOWN) {
-			GameKeys.setKey(GameKeys.DOWN, true);
-		}
-		if(k == Keys.RIGHT) {
-			GameKeys.setKey(GameKeys.RIGHT, true);
-		}
-		if(k == Keys.ENTER) {
-			GameKeys.setKey(GameKeys.ENTER, true);
-		}
-		if(k == Keys.ESCAPE) {
-			GameKeys.setKey(GameKeys.ESCAPE, true);
-		}
-		if(k == Keys.SPACE) {
-			GameKeys.setKey(GameKeys.SPACE, true);
-		}
-		if(k == Keys.SHIFT_LEFT || k == Keys.SHIFT_RIGHT) {
-			GameKeys.setKey(GameKeys.SHIFT, true);
+		return setValueOf(k,true);
+	}
+
+	private boolean setValueOf(int key, boolean upOrDown)
+	{
+		switch(key){
+			case Keys.UP, Keys.W -> GameKeys.setKey(GameKeys.UP,upOrDown);
+			case Keys.LEFT, Keys.A -> GameKeys.setKey(GameKeys.LEFT,upOrDown);
+			case Keys.DOWN, Keys.S -> GameKeys.setKey(GameKeys.DOWN,upOrDown);
+			case Keys.RIGHT, Keys.D -> GameKeys.setKey(GameKeys.RIGHT,upOrDown);
+			case Keys.ENTER -> GameKeys.setKey(GameKeys.ENTER,upOrDown);
+			case Keys.ESCAPE -> GameKeys.setKey(GameKeys.ESCAPE,upOrDown);
+			case Keys.SHIFT_LEFT -> GameKeys.setKey(GameKeys.SHIFT,upOrDown);
 		}
 		return true;
 	}
 	
 	public boolean keyUp(int k) {
-		if(k == Keys.UP) {
-			GameKeys.setKey(GameKeys.UP, false);
-		}
-		if(k == Keys.LEFT) {
-			GameKeys.setKey(GameKeys.LEFT, false);
-		}
-		if(k == Keys.DOWN) {
-			GameKeys.setKey(GameKeys.DOWN, false);
-		}
-		if(k == Keys.RIGHT) {
-			GameKeys.setKey(GameKeys.RIGHT, false);
-		}
-		if(k == Keys.ENTER) {
-			GameKeys.setKey(GameKeys.ENTER, false);
-		}
-		if(k == Keys.ESCAPE) {
-			GameKeys.setKey(GameKeys.ESCAPE, false);
-		}
-		if(k == Keys.SPACE) {
-			GameKeys.setKey(GameKeys.SPACE, false);
-		}
-		if(k == Keys.SHIFT_LEFT || k == Keys.SHIFT_RIGHT) {
-			GameKeys.setKey(GameKeys.SHIFT, false);
-		}
-		return true;
+		return setValueOf(k,false);
 	}
 	
 }

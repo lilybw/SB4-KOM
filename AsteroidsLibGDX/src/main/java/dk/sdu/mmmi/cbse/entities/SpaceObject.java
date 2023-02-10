@@ -1,8 +1,9 @@
 package dk.sdu.mmmi.cbse.entities;
 
 import dk.sdu.mmmi.cbse.main.Game;
+import dk.sdu.mmmi.cbse.managers.ScreenManager;
 
-public class SpaceObject {
+public abstract class SpaceObject {
 	
 	protected float x;
 	protected float y;
@@ -21,10 +22,10 @@ public class SpaceObject {
 	protected float[] shapey;
 	
 	protected void wrap() {
-		if(x < 0) x = Game.WIDTH;
-		if(x > Game.WIDTH) x = 0;
-		if(y < 0) y = Game.HEIGHT;
-		if(y > Game.HEIGHT) y = 0; 
+		if(x < 0) x = ScreenManager.WIDTH;
+		if(x > ScreenManager.WIDTH) x = 0;
+		if(y < 0) y = ScreenManager.HEIGHT;
+		if(y > ScreenManager.HEIGHT) y = 0;
 	}
 	
 }
