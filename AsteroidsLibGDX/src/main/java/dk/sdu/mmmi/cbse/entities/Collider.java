@@ -4,6 +4,22 @@ import dk.sdu.mmmi.cbse.util.ArrayUtil;
 
 public class Collider {
 
+    @FunctionalInterface
+    public interface RadialCollisionFunction {
+        int isInBounds(float x, float y, float x1, float y1, float radius);
+    }
+    @FunctionalInterface
+    public interface PolygonalCollisionFunction {
+        int isInBounds(Point[] polygonVerts, int numVerts, Point samplePoint);
+    }
+    public static RadialCollisionFunction RADIAL = (x,y,x1,y1,radius) -> {
+        float xDiff = x - x1, yDiff = y - y1;
+        float distSQ = xDiff * xDiff + yDiff * yDiff;
+        return distSQ < radius * radius ? 1 : 0;
+    };
+    public static PolygonalCollisionFunction POLYGONAL = Collider::checkPolygonCollision;
+
+
     private float xMin,yMin,xMax,yMax;
     private Point[] polygon;
     private final int numVerts;

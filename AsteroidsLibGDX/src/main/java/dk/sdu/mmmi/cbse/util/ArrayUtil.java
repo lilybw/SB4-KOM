@@ -25,4 +25,21 @@ public class ArrayUtil {
     }
 
 
+    public static void print(Object[] arr){
+        StringBuilder build = new StringBuilder();
+        for(Object o : arr){
+            build.append(o.toString()).append(",");
+        }
+        System.out.println("Array["+build+"]");
+    }
+
+    public static void print(float[] arr){
+        StringBuilder build = new StringBuilder();
+        for(float f : arr){
+            build.append(f).append(",");
+        }
+        System.out.println("Array["+build+"]");
+    }
+
+
 }

@@ -16,6 +16,7 @@ public class GameInputProcessor extends InputAdapter {
 			case Keys.LEFT, Keys.A -> GameKeys.setKey(GameKeys.LEFT,upOrDown);
 			case Keys.DOWN, Keys.S -> GameKeys.setKey(GameKeys.DOWN,upOrDown);
 			case Keys.RIGHT, Keys.D -> GameKeys.setKey(GameKeys.RIGHT,upOrDown);
+			case Keys.SPACE -> GameKeys.setKey(GameKeys.SPACE,upOrDown);
 			case Keys.ENTER -> GameKeys.setKey(GameKeys.ENTER,upOrDown);
 			case Keys.ESCAPE -> GameKeys.setKey(GameKeys.ESCAPE,upOrDown);
 			case Keys.SHIFT_LEFT -> GameKeys.setKey(GameKeys.SHIFT,upOrDown);

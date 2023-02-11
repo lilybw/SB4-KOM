@@ -11,5 +11,9 @@ public interface IEntity {
     void update(float deltaT);
     void draw(ShapeRenderer sr);
     boolean isInBounds(float x, float y);
+    void ifInBounds(IEntity collidingEntity);
+
+    IEntity spawn();
+    IEntity destroy();
 
 }

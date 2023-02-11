@@ -32,6 +32,10 @@ public class GameStateManager {
 	public void draw() {
 		gameState.draw();
 	}
+
+	public GameState getCurrent(){
+		return gameState;
+	}
 	
 }
 

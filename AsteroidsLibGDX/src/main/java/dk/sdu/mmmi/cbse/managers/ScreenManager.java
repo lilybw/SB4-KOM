@@ -23,14 +23,17 @@ public class ScreenManager {
         resizeListeners.remove(obj);
     }
 
-    public float getNormalizedWidth()
+    public static float getNormalizedWidth()
     {
         return (WIDTH * WIDTH) / 3840f;
     }
-    public float getNormalizedHeight()
+    public static float getNormalizedHeight()
     {
         return (HEIGHT * HEIGHT) / 2160f;
     }
+
+    public static float getNormalizationScalarX(){return WIDTH / 3840f;}
+    public static float getNormalizationScalarY(){return HEIGHT / 2160f;}
 
     public void resizeAll(int newWidth, int newHeight)
     {

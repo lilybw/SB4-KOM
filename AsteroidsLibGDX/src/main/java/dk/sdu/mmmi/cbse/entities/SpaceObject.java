@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.cbse.entities;
 
-import dk.sdu.mmmi.cbse.main.Game;
 import dk.sdu.mmmi.cbse.managers.ScreenManager;
 
 public abstract class SpaceObject {
@@ -8,8 +7,8 @@ public abstract class SpaceObject {
 	protected float x;
 	protected float y;
 	
-	protected float dx;
-	protected float dy;
+	protected float velocityX;
+	protected float velocityY;
 	
 	protected float radians;
 	protected float speed;
