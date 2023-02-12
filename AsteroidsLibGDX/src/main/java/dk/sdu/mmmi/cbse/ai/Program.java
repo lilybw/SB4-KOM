@@ -16,13 +16,13 @@ public class Program<R,T> {
         boolean run(R ram, int timesRan);
     }
 
-    private final ProgramScheduler manager;
+    private final ProgramScheduler<T> manager;
     private final MachineCode<R> code;
     private final Function<T,R> contextSwitchFunc;
-    private R pageTable;
+    private R context;
     private int timesRan = 0;
 
-    public Program(ProgramScheduler manager, MachineCode<R> code, Function<T,R> contextSwitchFunc)
+    public Program(ProgramScheduler<T> manager, MachineCode<R> code, Function<T,R> contextSwitchFunc)
     {
         this.code = Objects.requireNonNull(code);
         this.manager = manager;
@@ -31,18 +31,19 @@ public class Program<R,T> {
 
     public void prepare(T obj)
     {
-        pageTable = contextSwitchFunc.apply(obj);
+        context = contextSwitchFunc.apply(obj);
     }
 
     public void execute()
     {
-        if(code.run(pageTable,timesRan)) onEOF();
+        if(code.run(context,timesRan)) onEOF();
         timesRan++;
     }
 
     private void onEOF()
     {
         timesRan = 0;
+        context = null;
         manager.advance();
     }
 

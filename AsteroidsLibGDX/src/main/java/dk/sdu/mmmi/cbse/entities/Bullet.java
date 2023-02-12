@@ -1,7 +1,7 @@
 package dk.sdu.mmmi.cbse.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import dk.sdu.mmmi.cbse.collisions.Collider;
 import dk.sdu.mmmi.cbse.fruity.NeonColours;
 import dk.sdu.mmmi.cbse.main.Game;
 import dk.sdu.mmmi.cbse.managers.ScreenManager;
@@ -12,6 +12,7 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
 
     private float hueShiftR, hueShiftG, hueShiftB;
     private boolean doHueShift = false;
+    private final Collider collider;
 
     private float x,y,velX,velY;
     private IEntity source;
@@ -28,6 +29,12 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
         this.y = y;
         this.source = source;
         this.hitRadius = 2;
+        this.collider = new Collider(
+                new float[]{x},
+                new float[]{y},
+                hitRadius,
+                Collider.CIRCLE
+        );
     }
     public Bullet speed(float speed){
         this.speed = speed;
@@ -39,6 +46,7 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
     }
     public Bullet size(float size){
         this.hitRadius = size;
+        collider.update(size);
         return this;
     }
 
@@ -54,13 +62,14 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
 
     @Override
     public void update(float deltaT) {
-        if(!isWithinBoundaryBox()){
+        if(Collider.RECTANGLE.isInBounds(ScreenManager.BOUNDARY,x,y) != 1){
             Game.getInstance().getState().removeEntity(this);
         }
         x += velX * speed * deltaT;
         y += velY * speed * deltaT;
         speed *= falloff;
         speed *= falloff;
+        collider.update(x,y,hitRadius);
     }
 
     private boolean isWithinBoundaryBox()
@@ -84,7 +93,7 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
 
     @Override
     public boolean isInBounds(float x1, float y1) {
-        return Collider.RADIAL.isInBounds(x,y,x1,y1,hitRadius) == 1;
+        return collider.isInBounds(x1,y1) == 1;
     }
 
     @Override

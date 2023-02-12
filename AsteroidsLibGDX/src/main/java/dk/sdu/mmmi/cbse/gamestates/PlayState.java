@@ -1,9 +1,9 @@
 package dk.sdu.mmmi.cbse.gamestates;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import dk.sdu.mmmi.cbse.entities.Collider;
 import dk.sdu.mmmi.cbse.entities.IEntity;
 import dk.sdu.mmmi.cbse.entities.Player;
+import dk.sdu.mmmi.cbse.entities.SpaceObject;
 import dk.sdu.mmmi.cbse.managers.GameStateManager;
 import dk.sdu.mmmi.cbse.util.ManagedBufferedCollection;
 
@@ -15,12 +15,19 @@ public class PlayState extends GameState {
 	public static boolean IS_PAUSED = false;
 
 	private ShapeRenderer sr;
+	private SpaceObject currentFocalPoint;
 
 	private final ManagedBufferedCollection<IEntity> entities = new ManagedBufferedCollection<>(new HashSet<>());
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
-		entities.add(new Player());
+		currentFocalPoint = new Player();
+		entities.add((Player) currentFocalPoint);
+	}
+
+	public SpaceObject getFocalPoint()
+	{
+		return currentFocalPoint;
 	}
 	
 	public void init() {

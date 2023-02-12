@@ -1,5 +1,6 @@
 package dk.sdu.mmmi.cbse.managers;
 
+import dk.sdu.mmmi.cbse.entities.SpaceObject;
 import dk.sdu.mmmi.cbse.gamestates.GameState;
 import dk.sdu.mmmi.cbse.gamestates.PlayState;
 
@@ -36,7 +37,10 @@ public class GameStateManager {
 	public GameState getCurrent(){
 		return gameState;
 	}
-	
+
+	public SpaceObject getFocalPoint() {
+		return gameState.getFocalPoint();
+	}
 }
 
 

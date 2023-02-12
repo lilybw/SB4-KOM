@@ -21,11 +21,14 @@ public abstract class SpaceObject {
 	protected float[] shapey;
 	
 	protected void wrap() {
-		if(x < 0) x = ScreenManager.WIDTH;
-		if(x > ScreenManager.WIDTH) x = 0;
-		if(y < 0) y = ScreenManager.HEIGHT;
-		if(y > ScreenManager.HEIGHT) y = 0;
+		if(x < ScreenManager.BOUNDARY.getColliderMesh().minX().get()) x = ScreenManager.WIDTH;
+		if(x > ScreenManager.BOUNDARY.getColliderMesh().maxX().get()) x = 0;
+		if(y < ScreenManager.BOUNDARY.getColliderMesh().minY().get()) y = ScreenManager.HEIGHT;
+		if(y > ScreenManager.BOUNDARY.getColliderMesh().maxY().get()) y = 0;
 	}
+
+	public float getX() {return x;}
+	public float getY() {return y;}
 	
 }
 

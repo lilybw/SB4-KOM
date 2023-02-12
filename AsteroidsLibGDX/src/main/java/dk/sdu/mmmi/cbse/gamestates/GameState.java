@@ -2,6 +2,7 @@ package dk.sdu.mmmi.cbse.gamestates;
 
 import dk.sdu.mmmi.cbse.entities.Bullet;
 import dk.sdu.mmmi.cbse.entities.IEntity;
+import dk.sdu.mmmi.cbse.entities.SpaceObject;
 import dk.sdu.mmmi.cbse.managers.GameStateManager;
 
 import java.util.Collection;
@@ -24,4 +25,6 @@ public abstract class GameState {
 	public abstract void removeEntity(IEntity e);
 	public abstract void addAll(Collection<IEntity> c);
 	public abstract void removeAll(Collection<IEntity> c);
+
+    public abstract SpaceObject getFocalPoint();
 }

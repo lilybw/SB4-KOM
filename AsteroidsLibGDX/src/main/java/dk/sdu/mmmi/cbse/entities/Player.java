@@ -3,6 +3,7 @@ package dk.sdu.mmmi.cbse.entities;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
+import dk.sdu.mmmi.cbse.collisions.Collider;
 import dk.sdu.mmmi.cbse.fruity.NeonColours;
 import dk.sdu.mmmi.cbse.main.Game;
 import dk.sdu.mmmi.cbse.managers.AbilityManager;
@@ -40,7 +41,7 @@ public class Player extends SpaceObject implements IEntity{
         radians = 3.1415f / 2;
         rotationSpeed = 3;
 
-        collider = new Collider(shapex,shapey);
+        collider = new Collider(shapex,shapey, Collider.POLYGON);
 
         onUpdateBehaviour.addAll(List.of(
                 this::basicMovementHandling,
@@ -93,7 +94,7 @@ public class Player extends SpaceObject implements IEntity{
     @Override
     public boolean isInBounds(float x, float y)
     {
-        return collider.isInBounds(new Collider.Point(x,y)) == 1;
+        return collider.isInBounds(x,y) == 1;
     }
 
     @Override

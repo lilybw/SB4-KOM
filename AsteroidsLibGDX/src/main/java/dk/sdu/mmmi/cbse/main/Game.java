@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import dk.sdu.mmmi.cbse.entities.IEntity;
+import dk.sdu.mmmi.cbse.entities.SpaceObject;
 import dk.sdu.mmmi.cbse.fruity.NeonColours;
 import dk.sdu.mmmi.cbse.gamestates.GameState;
 import dk.sdu.mmmi.cbse.gamestates.PlayState;
@@ -33,7 +34,7 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void create() {
-		cam = new OrthographicCamera(ScreenManager.WIDTH / 10F, ScreenManager.HEIGHT / 10F);
+		cam = new OrthographicCamera(ScreenManager.WIDTH / ScreenManager.ORTH_SCALAR, ScreenManager.HEIGHT / ScreenManager.ORTH_SCALAR);
 		cam.translate(ScreenManager.WIDTH / 2F, ScreenManager.HEIGHT / 2F);
 		cam.update();
 
@@ -67,6 +68,11 @@ public class Game implements ApplicationListener {
 
 	public void tick(float deltaT)
 	{
+		SpaceObject focalPoint = gsm.getFocalPoint();
+		cam.translate(focalPoint.getX() - .5f * ScreenManager.getNormalizedWidth(), focalPoint.getY() - .5f * ScreenManager.getNormalizedHeight());
+
+		cam.update();
+
 		gsm.update(Gdx.graphics.getDeltaTime());
 		GameKeys.update();
 		colours.update(Game.TICK_COUNT,10);
