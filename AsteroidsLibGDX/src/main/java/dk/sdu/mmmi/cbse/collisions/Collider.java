@@ -44,7 +44,8 @@ public class Collider {
 
     public static CollisionFunction POLYGON = Collider::checkPolygonCollision;
     /**
-     * Expects the colliding square to be the first 4 verts in the collision mesh.
+     * Expects the colliding square to be the first 2 verts in the collision mesh. I.e. the first 2 verts should be the diagonal line in any order.
+     * NB: Does not support rotation! Use Collider.POLYGON for that.
      */
     public static CollisionFunction RECTANGLE = (Collider collider, float pointX, float pointY) -> {
         float minX = collider.colliderMesh.minX().get(), maxX = collider.colliderMesh.maxX().get(),
@@ -52,13 +53,17 @@ public class Collider {
         return pointX > minX || pointX < maxX || pointY > minY || pointY < maxY ? 1 : 0;
     };
     /**
-     * Assumes the type of collider based on its number of verts.
+     * Assumes the type of collider based on its number of verts: <br>
+     * 1 -> Circle.<br>
+     * 2 -> Rectangle.<br>
+     * 3 -> Triangle.<br>
+     * Default -> Polygon
      */
     public static CollisionFunction ANY = (Collider collider, float pointX, float pointY) ->
             switch (collider.numVerts()){
                 case 1 -> CIRCLE.isInBounds(collider,pointX,pointY);
+                case 2 -> RECTANGLE.isInBounds(collider,pointX,pointY);
                 case 3 -> TRIANGLE.isInBounds(collider,pointX,pointY);
-                case 4 -> RECTANGLE.isInBounds(collider,pointX,pointY);
                 default -> POLYGON.isInBounds(collider,pointX,pointY);
             };
 
@@ -66,6 +71,20 @@ public class Collider {
     private final PreflightCheck preflightCheck;
     private final CollisionFunction collisionFunction;
 
+    /**
+     * Creates a circle collider
+     * @param x of the center
+     * @param y of the center
+     * @param radius of the circle
+     */
+    public Collider(float x, float y, float radius) {
+        this(new float[]{x},new float[]{y},radius,Collider.CIRCLE);
+    }
+
+    /**
+     * Creates any non-circle collider.
+     * @param func, do NOT give it circle.
+     */
     public Collider(float[] vertXs, float[] vertYs, CollisionFunction func)
     {
         this(vertXs,vertYs,-1,func);
@@ -141,6 +160,12 @@ public class Collider {
     public Mesh getColliderMesh()
     {
         return colliderMesh;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Collider" + " " + this.colliderMesh.toString();
     }
 
     static int onLine(Mesh.Line l1, Mesh.Point p)

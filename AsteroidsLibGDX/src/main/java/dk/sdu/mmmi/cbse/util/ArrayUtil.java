@@ -50,6 +50,14 @@ public class ArrayUtil {
         }
         return new float[]{currentX,currentY};
     }
+    public static String toString(Mesh.Point[] arr)
+    {
+        StringBuilder toReturn = new StringBuilder();
+        for(Mesh.Point p: arr){
+            toReturn.append("[").append(p.x).append(",").append(p.y).append("]");
+        }
+        return toReturn.toString();
+    }
 
 
     public static void print(Object[] arr){

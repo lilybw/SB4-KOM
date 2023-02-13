@@ -1,9 +1,6 @@
 package dk.sdu.mmmi.cbse.util;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -90,6 +87,11 @@ public class ManagedBufferedCollection<T> {
         synchronized (expired){
             current.forEach(func);
         }
+    }
+
+    public T[] __unsafeAccessCurrent(T[] empty)
+    {
+        return current.toArray(empty);
     }
 
 

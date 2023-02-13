@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.cbse.ai;
 
+import dk.sdu.mmmi.cbse.util.Function2;
+
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -13,30 +15,45 @@ public class Program<R,T> {
         /**
          * @return true if the program should not be repeated
          */
-        boolean run(R ram, int timesRan);
+        boolean run(R context, int timesRan, float deltaT);
+    }
+
+    @FunctionalInterface
+    public interface ContextChangeFunction<T,R>{
+        R gather(T object, R previousContext);
     }
 
     private final ProgramScheduler<T> manager;
     private final MachineCode<R> code;
-    private final Function<T,R> contextSwitchFunc;
+    private final ContextChangeFunction<T,R> contextSwitchFunc;
     private R context;
     private int timesRan = 0;
+    private final float executionDelay;
+    private String name = "unknown";
 
-    public Program(ProgramScheduler<T> manager, MachineCode<R> code, Function<T,R> contextSwitchFunc)
+    public Program(ProgramScheduler<T> manager,  float executionDelay, String name, ContextChangeFunction<T,R> contextSwitchFunc, MachineCode<R> code)
     {
         this.code = Objects.requireNonNull(code);
         this.manager = manager;
         this.contextSwitchFunc = Objects.requireNonNull(contextSwitchFunc);
+        this.executionDelay = executionDelay;
+        this.name = name;
     }
 
-    public void prepare(T obj)
+    public Program(ProgramScheduler<T> manager,  float executionDelay, ContextChangeFunction<T,R> contextSwitchFunc, MachineCode<R> code)
     {
-        context = contextSwitchFunc.apply(obj);
+        this(manager,executionDelay,"unknown program",contextSwitchFunc,code);
     }
 
-    public void execute()
+    public float prepare(T obj)
     {
-        if(code.run(context,timesRan)) onEOF();
+        context = contextSwitchFunc.gather(obj, context);
+        return executionDelay;
+    }
+
+    public void execute(float deltaT)
+    {
+        if(code.run(context,timesRan,deltaT)) onEOF();
         timesRan++;
     }
 
@@ -45,6 +62,12 @@ public class Program<R,T> {
         timesRan = 0;
         context = null;
         manager.advance();
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Program{name: "+name+"}";
     }
 
 }

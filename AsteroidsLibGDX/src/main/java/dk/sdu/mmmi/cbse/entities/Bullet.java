@@ -2,55 +2,54 @@ package dk.sdu.mmmi.cbse.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import dk.sdu.mmmi.cbse.collisions.Collider;
+import dk.sdu.mmmi.cbse.collisions.Mesh;
 import dk.sdu.mmmi.cbse.fruity.NeonColours;
 import dk.sdu.mmmi.cbse.main.Game;
 import dk.sdu.mmmi.cbse.managers.ScreenManager;
 
-public class Bullet implements IEntity, IConditionalEffect<IEntity> {
+public class Bullet extends SpaceObject implements IEntity, IConditionalEffect<IEntity> {
 
-    private float hitRadius;
+    private float size;
 
     private float hueShiftR, hueShiftG, hueShiftB;
     private boolean doHueShift = false;
     private final Collider collider;
 
-    private float x,y,velX,velY;
     private IEntity source;
-    private float speed = 1, falloff = 1;
+    private float falloff = 1;
 
     public Bullet(float[] xy, float[] dir, IEntity source)
     {
         this(xy[0],xy[1],dir[0],dir[1],source);
     }
     public Bullet(float x, float y, float dirX, float dirY, IEntity source){
-        this.velX = dirX;
-        this.velY = dirY;
-        this.x = x;
-        this.y = y;
+        super.velocityX = dirX;
+        super.velocityY = dirY;
+        super.x = x;
+        super.y = y;
         this.source = source;
-        this.hitRadius = 2;
-        this.collider = new Collider(
-                new float[]{x},
-                new float[]{y},
-                hitRadius,
-                Collider.CIRCLE
-        );
+        this.size = 2;
+        this.collider = new Collider(x, y, size);
     }
-    public Bullet speed(float speed){
-        this.speed = speed;
+    public IEntity getSource(){
+        return source;
+    }
+
+    public Bullet setSpeed(float speed){
+        super.speed = speed;
         return this;
     }
-    public Bullet falloff(float falloff){
+    public Bullet setFalloff(float falloff){
         this.falloff = falloff;
         return this;
     }
-    public Bullet size(float size){
-        this.hitRadius = size;
+    public Bullet setSize(float size){
+        this.size = size;
         collider.update(size);
         return this;
     }
 
-    public Bullet hueShift(float r, float g, float b)
+    public Bullet setHueShift(float r, float g, float b)
     {
         this.hueShiftR = r;
         this.hueShiftG = g;
@@ -59,17 +58,16 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
         return this;
     }
 
-
     @Override
     public void update(float deltaT) {
         if(Collider.RECTANGLE.isInBounds(ScreenManager.BOUNDARY,x,y) != 1){
             Game.getInstance().getState().removeEntity(this);
         }
-        x += velX * speed * deltaT;
-        y += velY * speed * deltaT;
+        x += velocityX * speed * deltaT;
+        y += velocityY * speed * deltaT;
         speed *= falloff;
         speed *= falloff;
-        collider.update(x,y,hitRadius);
+        collider.update(x,y, size);
     }
 
     private boolean isWithinBoundaryBox()
@@ -87,7 +85,7 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
             color = NeonColours.hueShift(color, hueShiftR,hueShiftG,hueShiftB);
         }
         sr.setColor(color[0],color[1],color[2],1);
-        sr.circle(x, y, hitRadius);
+        sr.circle(x, y, size);
         sr.end();
     }
 
@@ -100,7 +98,7 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
     public void ifInBounds(IEntity collidingEntity)
     {
         if(collidingEntity == source) return;
-        Game.getInstance().getState().removeEntity(this);
+        destroy();
     }
 
     public Bullet spawn(){
@@ -110,6 +108,24 @@ public class Bullet implements IEntity, IConditionalEffect<IEntity> {
     public Bullet destroy(){
         Game.getInstance().getState().removeEntity(this);
         return this;
+    }
+
+    @Override
+    public float getMass()
+    {
+        return 2f * size * 3.1415926f;
+    }
+
+    @Override
+    public float getMomentum()
+    {
+        return super.speed;
+    }
+
+    @Override
+    public Mesh.Point getCenterOfMass()
+    {
+        return collider.verts()[0];
     }
 
     @Override

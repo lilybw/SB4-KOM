@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.cbse.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import dk.sdu.mmmi.cbse.collisions.Mesh;
 
 public interface IEntity {
 
@@ -16,5 +17,11 @@ public interface IEntity {
     IEntity spawn();
     IEntity destroy();
 
+    float getMass();
+    float getMomentum();
+    Mesh.Point getCenterOfMass();
+
+    float getX();
+    float getY();
 
 }

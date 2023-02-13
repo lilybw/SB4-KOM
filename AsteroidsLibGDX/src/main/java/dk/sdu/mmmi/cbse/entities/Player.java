@@ -4,18 +4,23 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import dk.sdu.mmmi.cbse.collisions.Collider;
+import dk.sdu.mmmi.cbse.collisions.Mesh;
+import dk.sdu.mmmi.cbse.display.KnownHudElements;
+import dk.sdu.mmmi.cbse.events.ObservableRef;
 import dk.sdu.mmmi.cbse.fruity.NeonColours;
 import dk.sdu.mmmi.cbse.main.Game;
 import dk.sdu.mmmi.cbse.managers.AbilityManager;
 import dk.sdu.mmmi.cbse.managers.GameKeys;
+import dk.sdu.mmmi.cbse.managers.HUDManager;
 import dk.sdu.mmmi.cbse.managers.ScreenManager;
 import dk.sdu.mmmi.cbse.util.Touple;
+import dk.sdu.mmmi.cbse.util.VMath;
 import dk.sdu.mmmi.cbse.util.VoidFunc;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends SpaceObject implements IEntity{
+public class Player extends SpaceObject implements IEntity {
 
     private final float maxSpeed;
     private final float acceleration;
@@ -24,12 +29,15 @@ public class Player extends SpaceObject implements IEntity{
     private final List<VoidFunc<Float>> onUpdateBehaviour = new ArrayList<>();
     private final AbilityManager<Boolean,Float> shootOnSpace;
     private final AbilityManager<Boolean, Touple<Boolean,Float>> dashOnShift;
+    private final ObservableRef<Float> health = new ObservableRef<>(200f);
 
     private int Iframes = 0;
 
     public Player() {
-        x = ScreenManager.WIDTH / 2f;
-        y = ScreenManager.HEIGHT / 2f;
+        HUDManager.addObservable(KnownHudElements.PlayerHealth,health);
+
+        x = ScreenManager.WIDTH / 4f;
+        y = ScreenManager.HEIGHT / 4f;
 
         maxSpeed = 300;
         acceleration = 200;
@@ -45,7 +53,7 @@ public class Player extends SpaceObject implements IEntity{
 
         onUpdateBehaviour.addAll(List.of(
                 this::basicMovementHandling,
-                e -> setShape(),
+                e -> updateShape(),
                 e -> wrap(),
                 e -> collider.update(shapex,shapey),
                 e -> Iframes--
@@ -58,9 +66,10 @@ public class Player extends SpaceObject implements IEntity{
                     return correctKeyDown && trackedVariable.get() <= 0;
                 },
                 (trackedVariable,deltaT) -> {
+                    final double mag = VMath.mag(velocityX,velocityY);
                     new Bullet(shapex[0],shapey[0],(float) Math.cos(radians), (float) Math.sin(radians),this)
-                            .speed(100)
-                            .size(2 * Game.scaleX())
+                            .setSpeed(100f + (float) (Math.abs(velocityX) + Math.abs(velocityY)) / 2f)
+                            .setSize(2 * Game.scaleX())
                             .spawn();
                     trackedVariable.set(5f);
                 }
@@ -77,6 +86,8 @@ public class Player extends SpaceObject implements IEntity{
                 },
                 (trackedVariable, deltaT) -> {
                     if(trackedVariable.get().r <= 0f){
+                        velocityY /= 5f;
+                        velocityX /= 5f;
                         trackedVariable.get().t = false;
 
                     }else if(trackedVariable.get().r >= 3f || trackedVariable.get().t) {
@@ -89,7 +100,10 @@ public class Player extends SpaceObject implements IEntity{
                     y += MathUtils.sin(radians) * maxSpeed * 5 * deltaT;
                 }
         );
+        System.out.println(this);
     }
+
+
 
     @Override
     public boolean isInBounds(float x, float y)
@@ -99,10 +113,14 @@ public class Player extends SpaceObject implements IEntity{
 
     @Override
     public void ifInBounds(IEntity collidingEntity) {
-        if(collidingEntity instanceof Enemy){
-            System.out.println("Player.ifInBounds() with Enemy");
-        }else if(collidingEntity instanceof Bullet){
-            System.out.println("Player.ifInBounds() with Bullet");
+        if(collidingEntity instanceof Bullet){
+            if(((Bullet) collidingEntity).getSource() != this){
+                health.set(health.get() - collidingEntity.getMass() * collidingEntity.getMomentum());
+            }
+        }else if(collidingEntity instanceof Enemy){
+            health.set(health.get() - collidingEntity.getMass() * collidingEntity.getMomentum());
+        }else if(collidingEntity instanceof Asteroid){
+            health.set(health.get() - collidingEntity.getMass() * collidingEntity.getMomentum());
         }
     }
 
@@ -129,7 +147,6 @@ public class Player extends SpaceObject implements IEntity{
         }
 
         sr.end();
-
     }
 
     public Player spawn(){
@@ -142,7 +159,7 @@ public class Player extends SpaceObject implements IEntity{
     }
 
 
-    private void setShape() {
+    private void updateShape() {
         shapex[0] = x + (MathUtils.cos(radians) * 8);
         shapey[0] = y + (MathUtils.sin(radians) * 8);
 
@@ -196,6 +213,36 @@ public class Player extends SpaceObject implements IEntity{
         // set position
         x += velocityX * deltaT;
         y += velocityY * deltaT;
+    }
 
+    @Override
+    public float getMass()
+    {
+        return 200f;
+    }
+
+    @Override
+    public float getMomentum()
+    {
+        return VMath.mag(velocityX, velocityY);
+    }
+
+    @Override
+    public Mesh.Point getCenterOfMass()
+    {
+        //TODO: Have any polygonal collider calculate a specific center of mesh
+        return collider.verts()[0];
+    }
+
+    public float getCurrentHealth()
+    {
+        return health.get();
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return "Player{position: ["+x+","+y+"]}";
     }
 }

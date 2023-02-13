@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.cbse.managers;
 
 import dk.sdu.mmmi.cbse.collisions.Collider;
+import dk.sdu.mmmi.cbse.main.Game;
 import dk.sdu.mmmi.cbse.util.ManagedBufferedCollection;
 
 import java.awt.*;
@@ -19,9 +20,10 @@ public class ScreenManager {
     static {
         BOUNDARY = new Collider(
                 new float[]{0,getNormalizedWidth()},
-                new float[]{0,getNormalizedHeight() },
+                new float[]{0,getNormalizedHeight()},
                 Collider.RECTANGLE
         );
+        System.out.println(BOUNDARY);
     }
 
     public static void addOnResize(IResizable func)
@@ -35,15 +37,20 @@ public class ScreenManager {
 
     public static float getNormalizedWidth()
     {
-        return (WIDTH * WIDTH) / 3840f;
+        return WIDTH * getNormalizationScalarX();
     }
     public static float getNormalizedHeight()
     {
-        return (HEIGHT * HEIGHT) / 2160f;
+        return HEIGHT * getNormalizationScalarY();
     }
 
     public static float getNormalizationScalarX(){return WIDTH / 3840f;}
     public static float getNormalizationScalarY(){return HEIGHT / 2160f;}
+
+    public static void updateToReflect(int width, int height) {
+        WIDTH = width;
+        HEIGHT = height;
+    }
 
     public void resizeAll(int newWidth, int newHeight)
     {
@@ -52,5 +59,18 @@ public class ScreenManager {
 
     public void onGdxResize(int width, int height) {
         resizeAll(width,height);
+    }
+
+    public static float[] getRandomPositionOutsideViewport(float maxSizeOfObject)
+    {
+        float x,y;
+        if(Game.rand.nextBoolean()){
+            x = Game.rand.nextFloat() > .5 ? -maxSizeOfObject : ScreenManager.WIDTH + maxSizeOfObject;
+            y = Game.rand.nextFloat() * ScreenManager.HEIGHT;
+        }else{
+            y = Game.rand.nextFloat() > .5 ? -maxSizeOfObject : ScreenManager.HEIGHT + maxSizeOfObject;
+            x = Game.rand.nextFloat() * ScreenManager.WIDTH;
+        }
+        return new float[]{x,y};
     }
 }
