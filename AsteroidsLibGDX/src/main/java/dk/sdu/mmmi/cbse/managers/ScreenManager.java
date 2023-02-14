@@ -19,8 +19,8 @@ public class ScreenManager {
     public static float ORTH_SCALAR = 10f;
     static {
         BOUNDARY = new Collider(
-                new float[]{0,getNormalizedWidth()},
-                new float[]{0,getNormalizedHeight()},
+                new float[]{0,WIDTH},
+                new float[]{0,HEIGHT},
                 Collider.RECTANGLE
         );
         System.out.println(BOUNDARY);

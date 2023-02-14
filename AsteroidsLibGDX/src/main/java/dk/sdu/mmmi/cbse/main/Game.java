@@ -4,9 +4,12 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import dk.sdu.mmmi.cbse.display.KnownHudElements;
 import dk.sdu.mmmi.cbse.entities.IEntity;
 import dk.sdu.mmmi.cbse.entities.Player;
 import dk.sdu.mmmi.cbse.entities.SpaceObject;
+import dk.sdu.mmmi.cbse.events.Observable;
+import dk.sdu.mmmi.cbse.events.ObservableRef;
 import dk.sdu.mmmi.cbse.fruity.NeonColours;
 import dk.sdu.mmmi.cbse.gamestates.GameState;
 import dk.sdu.mmmi.cbse.gamestates.PlayState;
@@ -32,12 +35,13 @@ public class Game implements ApplicationListener {
 	private static Game instance;
 	private GameStateManager gsm;
 	private NeonColours colours;
+	private final ObservableRef<Integer> currentScore = new ObservableRef<>(0);
 
 	@Override
 	public void create() {
 		final int width = Gdx.graphics.getWidth(), height =  Gdx.graphics.getHeight();
 		ScreenManager.updateToReflect(width,height);
-		cam = new OrthographicCamera(width * 4, height * 4);
+		cam = new OrthographicCamera(width, height);
 		cam.position.set(width / 2f, height / 2f, 0);
 		cam.update();
 		System.out.println(cam.position + " " + cam.viewportWidth + " " + cam.viewportHeight);
@@ -49,6 +53,8 @@ public class Game implements ApplicationListener {
 		gsm = new GameStateManager();
 		colours = new NeonColours((float) Math.random() * 45);
 		instance = this;
+
+		HUDManager.addObservable(KnownHudElements.CurrentScore,currentScore);
 	}
 
 	public Player getPlayer()

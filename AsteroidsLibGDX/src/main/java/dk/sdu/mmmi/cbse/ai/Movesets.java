@@ -44,8 +44,8 @@ public class Movesets {
                 new Program<>(scheduler,1f,"fly to random location",
                         (player,previousContext) -> {
                             return new Mesh.Point(
-                                    Game.rand.nextFloat() * ScreenManager.WIDTH * .25f,
-                                    Game.rand.nextFloat() * ScreenManager.HEIGHT * .25f
+                                    Game.rand.nextFloat() * ScreenManager.WIDTH * .5f + ScreenManager.WIDTH * .25f,
+                                    Game.rand.nextFloat() * ScreenManager.HEIGHT * .5f + ScreenManager.HEIGHT * .25f
                             );
                         },
                         (Mesh.Point context, int timesRan, float deltaT) -> {

@@ -2,8 +2,10 @@ package dk.sdu.mmmi.cbse.gamestates;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import dk.sdu.mmmi.cbse.collisions.CollisionHandler;
+import dk.sdu.mmmi.cbse.display.PredefinedDisplays;
 import dk.sdu.mmmi.cbse.entities.*;
 import dk.sdu.mmmi.cbse.managers.GameStateManager;
+import dk.sdu.mmmi.cbse.managers.ScreenManager;
 import dk.sdu.mmmi.cbse.managers.Spawner;
 import dk.sdu.mmmi.cbse.util.ManagedBufferedCollection;
 
@@ -72,6 +74,7 @@ public class PlayState extends GameState {
 	
 	public void draw() {
 		entities.forEachCurrent(e -> e.draw(sr));
+		PredefinedDisplays.IN_GAME.display.draw(sr,0,0, ScreenManager.getNormalizationScalarX(),ScreenManager.getNormalizationScalarY());
 	}
 	
 	public void dispose() {}

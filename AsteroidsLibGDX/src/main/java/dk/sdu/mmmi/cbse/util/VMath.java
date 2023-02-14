@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.cbse.util;
 
+import com.badlogic.gdx.math.MathUtils;
+
 public class VMath {
 
 
@@ -21,5 +23,10 @@ public class VMath {
     public static float[] normalize(float vX, float vY, float mag)
     {
         return new float[]{vX / mag, vY / mag};
+    }
+
+    public static float dist(float aX, float aY, float bX, float bY)
+    {
+        return mag(aX-bX,aY-bY);
     }
 }

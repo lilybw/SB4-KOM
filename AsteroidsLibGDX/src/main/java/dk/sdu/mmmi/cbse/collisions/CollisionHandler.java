@@ -15,6 +15,7 @@ public class CollisionHandler {
             for(int j = i + 1; j < asArray.length; j++){
                 if(asArray[i].isInBounds(asArray[j].getX(), asArray[j].getY())){
                     asArray[i].ifInBounds(asArray[j]);
+                    asArray[j].ifInBounds(asArray[i]);
                 }
             }
         }
