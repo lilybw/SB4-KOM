@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.cbse.playersystem;
+package dk.sdu.mmmi.cbse.enemysystem;
 
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
@@ -7,16 +7,16 @@ import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 
-public class PlayerPlugin implements IGamePluginService {
+public class EnemyPlugin implements IGamePluginService {
 
     private Entity player;
 
-    public PlayerPlugin() {
+    public EnemyPlugin() {
     }
 
     @Override
     public void start(GameData gameData, World world) {
-        
+
         // Add entities to the world
         player = createPlayerShip(gameData);
         world.addEntity(player);
@@ -31,11 +31,11 @@ public class PlayerPlugin implements IGamePluginService {
         float x = gameData.getDisplayWidth() / 2f;
         float y = gameData.getDisplayHeight() / 2f;
         float radians = 3.1415f / 2;
-        
-        Entity playerShip = new Player();
+
+        Entity playerShip = new Enemy();
         playerShip.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed));
         playerShip.add(new PositionPart(x, y, radians));
-        
+
         return playerShip;
     }
 

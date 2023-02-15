@@ -17,6 +17,6 @@ public class TextElement extends DisplayElement{
     @Override
     public void draw(ShapeRenderer sr, float offX, float offY, float scalarX, float scalarY)
     {
-        TextRenderer.write(sr,text,offX + x,offY + y,(width / letterCount) * scalarX,height * scalarY, Color.RED);
+        TextRenderer.write(sr,text,offX + x,offY + y,(width / (letterCount + 1)) * scalarX,height * scalarY,.01f, Color.RED);
     }
 }

@@ -1,6 +1,8 @@
-package dk.sdu.mmmi.cbse.display;
+package dk.sdu.mmmi.cbse.display.reactive;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import dk.sdu.mmmi.cbse.display.DisplayElement;
+import dk.sdu.mmmi.cbse.display.KnownHudElements;
 import dk.sdu.mmmi.cbse.events.Observable;
 import dk.sdu.mmmi.cbse.events.ValueChangeCallback;
 import dk.sdu.mmmi.cbse.managers.HUDManager;

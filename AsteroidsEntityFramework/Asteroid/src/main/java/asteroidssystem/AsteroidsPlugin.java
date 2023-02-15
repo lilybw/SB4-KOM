@@ -1,4 +1,4 @@
-package dk.sdu.mmmi.cbse.playersystem;
+package asteroidssystem;
 
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
@@ -7,22 +7,22 @@ import dk.sdu.mmmi.cbse.common.data.entityparts.MovingPart;
 import dk.sdu.mmmi.cbse.common.data.entityparts.PositionPart;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 
-public class PlayerPlugin implements IGamePluginService {
+public class AsteroidsPlugin implements IGamePluginService {
 
-    private Entity player;
+    private Entity asteroid;
 
-    public PlayerPlugin() {
+    public AsteroidsPlugin() {
     }
 
     @Override
     public void start(GameData gameData, World world) {
-        
+
         // Add entities to the world
-        player = createPlayerShip(gameData);
-        world.addEntity(player);
+        asteroid = createNewAsteroid(gameData);
+        world.addEntity(asteroid);
     }
 
-    private Entity createPlayerShip(GameData gameData) {
+    private Entity createNewAsteroid(GameData gameData) {
 
         float deacceleration = 10;
         float acceleration = 200;
@@ -31,18 +31,17 @@ public class PlayerPlugin implements IGamePluginService {
         float x = gameData.getDisplayWidth() / 2f;
         float y = gameData.getDisplayHeight() / 2f;
         float radians = 3.1415f / 2;
-        
-        Entity playerShip = new Player();
-        playerShip.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed));
-        playerShip.add(new PositionPart(x, y, radians));
-        
-        return playerShip;
+
+        Entity newAstroid = new Asteroid();
+        newAstroid.add(new MovingPart(deacceleration, acceleration, maxSpeed, rotationSpeed));
+        newAstroid.add(new PositionPart(x, y, radians));
+
+        return newAstroid;
     }
 
     @Override
     public void stop(GameData gameData, World world) {
         // Remove entities
-        world.removeEntity(player);
+        world.removeEntity(asteroid);
     }
-
 }

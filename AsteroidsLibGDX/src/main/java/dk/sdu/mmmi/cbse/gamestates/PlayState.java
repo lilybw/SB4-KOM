@@ -23,15 +23,13 @@ public class PlayState extends GameState {
 	private final Spawner<Asteroid> asteroids;
 	private final Spawner<Enemy> enemies;
 
-
 	private final ManagedBufferedCollection<IEntity> entities = new ManagedBufferedCollection<>(new HashSet<>());
 
 	public PlayState(GameStateManager gsm) {
 		super(gsm);
 		player = new Player();
-		Enemy enemy = new Enemy();
 		currentFocalPoint = player;
-		entities.addAll(List.of(player,enemy));
+		entities.addAll(List.of(player));
 		asteroids = new Spawner<>(1,Asteroid::new);
 		enemies = new Spawner<>(5,Enemy::new);
 	}

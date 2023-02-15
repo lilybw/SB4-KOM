@@ -47,4 +47,7 @@ public class World {
         return entityMap.get(ID);
     }
 
+    public void removeEntities(List<String> cleanUp) {
+        cleanUp.forEach(entityMap::remove);
+    }
 }

@@ -90,6 +90,7 @@ public class Game implements ApplicationListener {
 		GameKeys.update();
 		colours.update(Game.TICK_COUNT,10);
 		TICK_COUNT++;
+		currentScore.set((int) TICK_COUNT);
 	}
 	
 	@Override
