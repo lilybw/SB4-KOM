@@ -16,7 +16,7 @@ public class Entity implements Serializable {
     private float boundingCircleX;
     private float boundingCircleY;
 
-    private Map<Class, EntityPart> parts;
+    private Map<Class<?>, EntityPart> parts;
 
     public Entity() {
         parts = new ConcurrentHashMap<>();
@@ -27,11 +27,12 @@ public class Entity implements Serializable {
         parts.put(part.getClass(), part);
     }
 
-    public void remove(Class partClass) {
+    public void remove(Class<?> partClass) {
         parts.remove(partClass);
     }
 
-    public <E extends EntityPart> E getPart(Class partClass) {
+    @SuppressWarnings("unchecked")
+    public <E extends EntityPart> E getPart(Class<?> partClass) {
         return (E) parts.get(partClass);
     }
 
@@ -83,11 +84,8 @@ public class Entity implements Serializable {
     public boolean checkCollision(Entity entity) {
         float dx = this.boundingCircleX - entity.boundingCircleX;
         float dy = this.boundingCircleY - entity.boundingCircleY;
-        float distance = (float) Math.sqrt(dx * dx + dy * dy);
-        if (distance < this.radius + entity.radius) {
-            return true;
-        }
-        return false;
+        float distanceSQ = dx * dx + dy * dy;
+        return distanceSQ < (this.radius + entity.radius) * (this.radius + entity.radius);
     }
 
 }
